@@ -8,7 +8,11 @@ struct Prayer_DebtsApp: App {
             PrayerDebt.self,
             PrayerLog.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .automatic
+        )
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -20,6 +24,7 @@ struct Prayer_DebtsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .withAppTheme()
         }
         .modelContainer(sharedModelContainer)
     }
