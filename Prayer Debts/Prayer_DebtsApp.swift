@@ -1,10 +1,3 @@
-//
-//  Prayer_DebtsApp.swift
-//  Prayer Debts
-//
-//  Created by Rieshat on 18.02.2026.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -12,7 +5,8 @@ import SwiftData
 struct Prayer_DebtsApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            PrayerDebt.self,
+            PrayerLog.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
