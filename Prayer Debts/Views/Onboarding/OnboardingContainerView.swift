@@ -19,17 +19,21 @@ struct OnboardingContainerView: View {
                     onManualEntry: { withAnimation(.easeInOut(duration: 0.8)) { step = 3 } }
                 )
             case 2:
-                AutoCalculateView { debtPerPrayer in
+                AutoCalculateView(onCalculate: { debtPerPrayer in
                     for prayer in PrayerType.allCases {
                         calculatedDebts[prayer] = debtPerPrayer
                     }
                     withAnimation(.easeInOut(duration: 0.8)) { step = 4 }
-                }
+                }, onGoBack: {
+                    withAnimation(.easeInOut(duration: 0.8)) { step = 1 }
+                })
             case 3:
-                ManualEntryView { debts in
+                ManualEntryView(onContinue: { debts in
                     calculatedDebts = debts
                     withAnimation(.easeInOut(duration: 0.8)) { step = 4 }
-                }
+                }, onGoBack: {
+                    withAnimation(.easeInOut(duration: 0.8)) { step = 1 }
+                })
             default:
                 RevealView(
                     totalPrayers: calculatedDebts.values.reduce(0, +),

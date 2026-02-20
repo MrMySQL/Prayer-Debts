@@ -5,6 +5,7 @@ struct AutoCalculateView: View {
     @State private var mukallafYear = Calendar.current.component(.year, from: Date()) - 10
     @State private var startedPrayingYear = Calendar.current.component(.year, from: Date())
     let onCalculate: (_ debtPerPrayer: Int) -> Void
+    var onGoBack: (() -> Void)? = nil
 
     private var currentYear: Int {
         Calendar.current.component(.year, from: Date())
@@ -69,7 +70,20 @@ struct AutoCalculateView: View {
                     let debtPerPrayer = years * 365
                     onCalculate(debtPerPrayer)
                 }
-                .padding(.bottom, 48)
+
+                Spacer().frame(height: 12)
+
+                if let onGoBack {
+                    Button {
+                        onGoBack()
+                    } label: {
+                        Text("Choose a different method")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundStyle(colors.secondaryText)
+                    }
+                }
+
+                Spacer().frame(height: 48)
             }
         }
     }

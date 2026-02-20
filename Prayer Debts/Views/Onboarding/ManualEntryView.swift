@@ -6,6 +6,7 @@ struct ManualEntryView: View {
         .fajr: "", .dhuhr: "", .asr: "", .maghrib: "", .isha: ""
     ]
     let onContinue: (_ debts: [PrayerType: Int]) -> Void
+    var onGoBack: (() -> Void)? = nil
 
     var body: some View {
         ZStack {
@@ -57,7 +58,20 @@ struct ManualEntryView: View {
                     }
                     onContinue(result)
                 }
-                .padding(.bottom, 48)
+
+                Spacer().frame(height: 12)
+
+                if let onGoBack {
+                    Button {
+                        onGoBack()
+                    } label: {
+                        Text("Choose a different method")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundStyle(colors.secondaryText)
+                    }
+                }
+
+                Spacer().frame(height: 48)
             }
         }
     }
