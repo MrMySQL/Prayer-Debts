@@ -33,24 +33,32 @@ struct DashboardView: View {
 
             ScrollView {
                 VStack(spacing: 16) {
-                    // Settings gear
-                    HStack {
-                        Spacer()
-                        Button {
-                            showSettings = true
-                        } label: {
-                            Image(systemName: "gearshape")
-                                .font(.system(size: 20))
-                                .foregroundStyle(colors.secondaryText)
+                    ZStack() {
+                        // Journey header
+                        JourneyHeaderView(
+                            totalOffered: totalOffered,
+                            overallProgress: overallProgress
+                        )
+                        
+                        // Settings gear
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    showSettings = true
+                                } label: {
+                                    Image(systemName: "gearshape")
+                                        .font(.system(size: 20))
+                                        .foregroundStyle(colors.secondaryText)
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 20)
+                            
+                            Spacer()
                         }
                     }
-                    .padding(.horizontal, 20)
-
-                    // Journey header
-                    JourneyHeaderView(
-                        totalOffered: totalOffered,
-                        overallProgress: overallProgress
-                    )
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
 
                     // Prayer cards
                     VStack(spacing: 12) {
