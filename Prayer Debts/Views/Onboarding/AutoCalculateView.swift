@@ -20,7 +20,7 @@ struct AutoCalculateView: View {
             WarmBackground()
 
             VStack(spacing: 0) {
-                Spacer().frame(height: 60)
+                Spacer()
 
                 Text("When did you become\nmukallaf?")
                     .font(.system(size: 22, weight: .medium))
