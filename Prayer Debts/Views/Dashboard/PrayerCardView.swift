@@ -4,10 +4,12 @@ struct PrayerCardView: View {
     @Environment(\.themeColors) private var colors
     let debt: PrayerDebt
     let onPrayed: () -> Void
-    let onUndo: () -> Void
+    let onUndo: (Int) -> Void
 
     @State private var showUndo = false
     @State private var ripple = false
+    @State private var tapCount = 0
+    @State private var undoTimer: Task<Void, Never>?
 
     var body: some View {
         Button(action: handleTap) {
@@ -31,9 +33,22 @@ struct PrayerCardView: View {
                             .foregroundStyle(AppTheme.accentStart)
                             .contentTransition(.numericText())
 
-                        Text("offered")
-                            .font(.system(size: 13))
+                        if showUndo {
+                            Button("Undo (\(tapCount))") {
+                                onUndo(tapCount)
+                                tapCount = 0
+                                undoTimer?.cancel()
+                                withAnimation { showUndo = false }
+                            }
+                            .font(.system(size: 13, weight: .medium))
                             .foregroundStyle(colors.secondaryText)
+                            .transition(.opacity)
+                        } else {
+                            Text("offered")
+                                .font(.system(size: 13))
+                                .foregroundStyle(colors.secondaryText)
+                                .transition(.opacity)
+                        }
                     }
                 }
 
@@ -50,20 +65,6 @@ struct PrayerCardView: View {
                     }
                 }
                 .frame(height: 4)
-
-                // Undo row
-                if showUndo {
-                    HStack {
-                        Spacer()
-                        Button("Undo") {
-                            onUndo()
-                            withAnimation { showUndo = false }
-                        }
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(colors.secondaryText)
-                    }
-                    .transition(.opacity)
-                }
             }
             .padding(16)
             .background(colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
@@ -76,10 +77,14 @@ struct PrayerCardView: View {
         guard debt.remaining > 0 else { return }
         ripple.toggle()
         onPrayed()
+        tapCount += 1
 
         withAnimation { showUndo = true }
-        Task {
+        undoTimer?.cancel()
+        undoTimer = Task {
             try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            tapCount = 0
             withAnimation { showUndo = false }
         }
     }

@@ -66,7 +66,7 @@ struct DashboardView: View {
                             PrayerCardView(
                                 debt: debt,
                                 onPrayed: { logPrayer(debt: debt) },
-                                onUndo: { undoPrayer(debt: debt) }
+                                onUndo: { count in undoPrayers(debt: debt, count: count) }
                             )
                         }
                     }
@@ -94,18 +94,18 @@ struct DashboardView: View {
         modelContext.insert(log)
     }
 
-    private func undoPrayer(debt: PrayerDebt) {
-        guard debt.completedCount > 0 else { return }
+    private func undoPrayers(debt: PrayerDebt, count: Int) {
+        let actual = min(count, debt.completedCount)
+        guard actual > 0 else { return }
         withAnimation {
-            debt.completedCount -= 1
+            debt.completedCount -= actual
         }
-        // Remove the most recent log for this prayer type by filtering in-memory
         let prayerRaw = debt.prayerTypeRaw
         let matching = allLogs
             .filter { $0.prayerTypeRaw == prayerRaw }
             .sorted { $0.date > $1.date }
-        if let latest = matching.first {
-            modelContext.delete(latest)
+        for log in matching.prefix(actual) {
+            modelContext.delete(log)
         }
     }
 }
