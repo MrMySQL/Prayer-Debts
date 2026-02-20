@@ -13,6 +13,8 @@ struct JourneyHeaderView: View {
 
     private var trimRange: CGFloat { trimEnd - trimStart }
 
+    private let glowColor = Color(.black)
+
     private var progressTrimEnd: CGFloat {
         trimStart + trimRange * min(max(overallProgress, 0), 1)
     }
@@ -40,8 +42,11 @@ struct JourneyHeaderView: View {
             Text("YOUR JOURNEY")
                 .font(.system(size: 13, weight: .regular))
                 .tracking(2)
-                .foregroundStyle(colors.secondaryText)
+                .foregroundStyle(.white)
+                .shadow(color: glowColor.opacity(1), radius: 2, x: 0, y: 0)
+                .shadow(color: glowColor.opacity(1), radius: 4, x: 0, y: 0)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
+                
 
             // Arc + center text
             ZStack {

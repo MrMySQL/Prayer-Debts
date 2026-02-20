@@ -22,24 +22,18 @@ struct WelcomeView: View {
                     .padding(.bottom, 40)
                     .opacity(showBismillah ? 1 : 0)
 
-                VStack(spacing: 8) {
-                    Text("The best time to start")
-                        .font(.system(size: 20, weight: .regular))
-                    Text("was years ago.")
-                        .font(.system(size: 20, weight: .regular))
-                }
-                .foregroundStyle(colors.primaryText)
-                .padding(.bottom, 20)
-                .opacity(showFirstQuote ? 1 : 0)
+                Text("The best time to start\nwas years ago.")
+                    .font(.system(size: 20, weight: .regular))
+                    .foregroundStyle(colors.primaryText)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 20)
+                    .opacity(showFirstQuote ? 1 : 0)
 
-                VStack(spacing: 8) {
-                    Text("The second best time")
-                        .font(.system(size: 20, weight: .regular))
-                    Text("is now.")
-                        .font(.system(size: 20, weight: .medium))
-                }
-                .foregroundStyle(colors.primaryText)
-                .opacity(showSecondQuote ? 1 : 0)
+                Text("The second best time\nis now.")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(colors.primaryText)
+                    .multilineTextAlignment(.center)
+                    .opacity(showSecondQuote ? 1 : 0)
 
                 Spacer()
                 Spacer()

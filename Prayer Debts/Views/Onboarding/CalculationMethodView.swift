@@ -12,11 +12,7 @@ struct CalculationMethodView: View {
             VStack(spacing: 0) {
                 Spacer()
 
-                VStack(spacing: 4) {
-                    Text("How would you like")
-                    Text("to calculate your")
-                    Text("prayer debt?")
-                }
+                Text("How would you like\nto calculate your\nprayer debt?")
                 .font(.system(size: 24, weight: .medium))
                 .foregroundStyle(colors.primaryText)
                 .multilineTextAlignment(.center)
@@ -47,8 +43,8 @@ struct CalculationMethodView: View {
 }
 
 private struct MethodCard: View {
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     let colors: ThemeColors
     let action: () -> Void
 
