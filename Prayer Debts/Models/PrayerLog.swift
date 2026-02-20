@@ -3,8 +3,8 @@ import SwiftData
 
 @Model
 final class PrayerLog {
-    var prayerTypeRaw: Int
-    var date: Date
+    var prayerTypeRaw: Int = 0
+    var date: Date = Date.now
 
     var prayerType: PrayerType {
         get { PrayerType(rawValue: prayerTypeRaw) ?? .fajr }

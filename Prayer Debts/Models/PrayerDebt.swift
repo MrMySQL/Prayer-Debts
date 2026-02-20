@@ -3,9 +3,9 @@ import SwiftData
 
 @Model
 final class PrayerDebt {
-    var prayerTypeRaw: Int
-    var totalDebt: Int
-    var completedCount: Int
+    var prayerTypeRaw: Int = 0
+    var totalDebt: Int = 0
+    var completedCount: Int = 0
 
     var prayerType: PrayerType {
         get { PrayerType(rawValue: prayerTypeRaw) ?? .fajr }
