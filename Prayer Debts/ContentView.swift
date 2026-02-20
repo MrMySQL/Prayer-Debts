@@ -5,10 +5,13 @@ struct ContentView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
-        if hasCompletedOnboarding {
-            DashboardView()
-        } else {
-            OnboardingContainerView()
+        Group {
+            if hasCompletedOnboarding {
+                DashboardView()
+            } else {
+                OnboardingContainerView()
+            }
         }
+        .animation(.easeInOut(duration: 1.2), value: hasCompletedOnboarding)
     }
 }

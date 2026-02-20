@@ -65,10 +65,10 @@ struct RevealView: View {
             }
         }
         .onAppear {
-            withAnimation(.easeIn(duration: 0.6)) { showNumber = true }
-            withAnimation(.easeIn(duration: 0.6).delay(0.5)) { showSubtext = true }
-            withAnimation(.easeIn(duration: 0.6).delay(1.0)) { showAyah = true }
-            withAnimation(.easeIn(duration: 0.6).delay(1.5)) { showButton = true }
+            withAnimation(.easeIn(duration: 1.0)) { showNumber = true }
+            withAnimation(.easeIn(duration: 1.0).delay(0.8)) { showSubtext = true }
+            withAnimation(.easeIn(duration: 1.0).delay(1.6)) { showAyah = true }
+            withAnimation(.easeIn(duration: 1.0).delay(2.4)) { showButton = true }
         }
     }
 }

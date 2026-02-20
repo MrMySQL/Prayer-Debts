@@ -12,23 +12,23 @@ struct OnboardingContainerView: View {
         Group {
             switch step {
             case 0:
-                WelcomeView { withAnimation(.easeInOut(duration: 0.5)) { step = 1 } }
+                WelcomeView { withAnimation(.easeInOut(duration: 0.8)) { step = 1 } }
             case 1:
                 CalculationMethodView(
-                    onAutoCalculate: { withAnimation(.easeInOut(duration: 0.5)) { step = 2 } },
-                    onManualEntry: { withAnimation(.easeInOut(duration: 0.5)) { step = 3 } }
+                    onAutoCalculate: { withAnimation(.easeInOut(duration: 0.8)) { step = 2 } },
+                    onManualEntry: { withAnimation(.easeInOut(duration: 0.8)) { step = 3 } }
                 )
             case 2:
                 AutoCalculateView { debtPerPrayer in
                     for prayer in PrayerType.allCases {
                         calculatedDebts[prayer] = debtPerPrayer
                     }
-                    withAnimation(.easeInOut(duration: 0.5)) { step = 4 }
+                    withAnimation(.easeInOut(duration: 0.8)) { step = 4 }
                 }
             case 3:
                 ManualEntryView { debts in
                     calculatedDebts = debts
-                    withAnimation(.easeInOut(duration: 0.5)) { step = 4 }
+                    withAnimation(.easeInOut(duration: 0.8)) { step = 4 }
                 }
             default:
                 RevealView(
@@ -48,7 +48,7 @@ struct OnboardingContainerView: View {
             )
             modelContext.insert(debt)
         }
-        withAnimation(.easeInOut(duration: 0.5)) {
+        withAnimation(.easeInOut(duration: 0.8)) {
             hasCompletedOnboarding = true
         }
     }
