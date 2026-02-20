@@ -9,7 +9,7 @@ struct JourneyHeaderView: View {
     private let trimStart: CGFloat = 0
     private let trimEnd: CGFloat = 0.75
     private let arcRotation: Angle = .degrees(135)
-    private let arcSize: CGFloat = 200
+    private let arcSize: CGFloat = 180
 
     private var trimRange: CGFloat { trimEnd - trimStart }
 
@@ -35,12 +35,13 @@ struct JourneyHeaderView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             // "YOUR JOURNEY" label
             Text("YOUR JOURNEY")
                 .font(.system(size: 13, weight: .regular))
                 .tracking(2)
                 .foregroundStyle(colors.secondaryText)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
 
             // Arc + center text
             ZStack {
@@ -68,7 +69,7 @@ struct JourneyHeaderView: View {
                 // Center text
                 VStack(spacing: 2) {
                     Text("\(totalOffered.formatted())")
-                        .font(.system(size: 40, weight: .light))
+                        .font(.system(size: 60, weight: .light))
                         .foregroundStyle(timeGradient)
                         .contentTransition(.numericText())
 
@@ -76,10 +77,11 @@ struct JourneyHeaderView: View {
                         .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(colors.secondaryText)
                 }
+                .padding(EdgeInsets(top: -16, leading: 0, bottom: 0, trailing: 0))
             }
             .frame(width: arcSize, height: arcSize)
         }
-        .padding(.vertical, 24)
+        .padding(EdgeInsets(top: 24, leading: 0, bottom: 0, trailing: 0))
         .animation(.easeInOut, value: Calendar.current.component(.hour, from: Date()))
     }
 }

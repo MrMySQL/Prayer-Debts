@@ -16,7 +16,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                WarmBackground()
+//                WarmBackground()
 
                 ScrollView {
                     VStack(spacing: 24) {
