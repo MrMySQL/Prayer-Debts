@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Debts — Your Journey Back, One Prayer at a Time</title>
+    <meta name="description" content="A calm, private iOS app for Muslims to track and repay missed (qada) prayers. No pressure, no gamification — just quiet dignity and progress.">
+    <meta property="og:title" content="Prayer Debts — Qada Prayer Tracker">
+    <meta property="og:description" content="Track your missed prayers with calm and dignity. One prayer at a time.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23C8956C'/%3E%3Cstop offset='100%25' stop-color='%23E8C47C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Amiri:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        warm: {
+                            bg: '#141210',
+                            surface: '#1E1C19',
+                            'surface-hover': '#262320',
+                            bar: '#252320',
+                            text: '#F5F0E8',
+                            muted: '#8A8279',
+                            accent: '#C8956C',
+                            'accent-light': '#E8C47C',
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        arabic: ['"Amiri"', 'serif'],
+                        body: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        /* ---- Noise texture overlay ---- */
+        .noise::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.022;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ---- Warm ambient glow ---- */
+        .warm-glow {
+            position: fixed;
+            top: -25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140%;
+            height: 70%;
+            background: radial-gradient(
+                ellipse at 50% 15%,
+                rgba(190, 120, 55, 0.18) 0%,
+                rgba(160, 95, 35, 0.07) 35%,
+                transparent 65%
+            );
+            pointer-events: none;
+            z-index: 0;
+            animation: breathe 10s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.72; }
+        }
+
+        /* ---- Hero entrance ---- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-anim {
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .h-d1 { animation-delay: 0.2s; }
+        .h-d2 { animation-delay: 0.5s; }
+        .h-d3 { animation-delay: 0.8s; }
+        .h-d4 { animation-delay: 1.1s; }
+        .h-d5 { animation-delay: 1.4s; }
+
+        /* ---- Scroll reveal ---- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .d1 { transition-delay: 0.1s; }
+        .d2 { transition-delay: 0.2s; }
+        .d3 { transition-delay: 0.3s; }
+        .d4 { transition-delay: 0.4s; }
+        .d5 { transition-delay: 0.5s; }
+        .d6 { transition-delay: 0.6s; }
+
+        /* ---- Scroll hint ---- */
+        @keyframes drift {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(10px); opacity: 0.8; }
+        }
+        .scroll-hint { animation: drift 2.5s ease-in-out infinite; }
+
+        /* ---- Gradient text ---- */
+        .grad-text {
+            background: linear-gradient(135deg, #C8956C 0%, #E8C47C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ---- Warm divider ---- */
+        .warm-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(200, 149, 108, 0.25), transparent);
+        }
+
+        /* ---- Phone frames ---- */
+        .phone {
+            position: relative;
+            background: #000;
+            padding: 10px;
+            box-shadow:
+                inset 0 0 0 1px rgba(255,255,255,0.06),
+                0 0 0 1px rgba(255,255,255,0.04),
+                0 25px 70px -10px rgba(0,0,0,0.6),
+                0 0 100px -20px rgba(200, 149, 108, 0.08);
+        }
+        .phone-lg {
+            width: 280px;
+            border-radius: 50px;
+        }
+        .phone-sm {
+            width: 230px;
+            border-radius: 44px;
+        }
+        .phone-screen {
+            width: 100%;
+            aspect-ratio: 393 / 852;
+            overflow: hidden;
+            background: #141210;
+        }
+        .phone-lg .phone-screen { border-radius: 42px; }
+        .phone-sm .phone-screen { border-radius: 36px; }
+        .phone-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ---- Phone gallery ---- */
+        .phone-gallery {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+        }
+        @media (max-width: 767px) {
+            .phone-gallery {
+                gap: 1.5rem;
+                justify-content: flex-start;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                padding: 2rem 2rem 2rem calc(50vw - 130px);
+                scrollbar-width: none;
+            }
+            .phone-gallery::-webkit-scrollbar { display: none; }
+            .phone-gallery > div {
+                scroll-snap-align: center;
+                flex-shrink: 0;
+            }
+            .phone-sm { width: 200px; border-radius: 40px; }
+            .phone-lg { width: 260px; border-radius: 46px; }
+            .phone-sm .phone-screen { border-radius: 32px; }
+            .phone-lg .phone-screen { border-radius: 38px; }
+        }
+
+        /* ---- Feature cards ---- */
+        .feat-card {
+            background: #1E1C19;
+            border-radius: 20px;
+            position: relative;
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.35s ease;
+        }
+        .feat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(145deg, rgba(200,149,108,0.18), transparent 55%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .feat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        /* ---- CTA button ---- */
+        .cta-btn {
+            background: linear-gradient(135deg, #C8956C 0%, #E8C47C 100%);
+            color: #141210;
+            transition: transform 0.2s ease, box-shadow 0.25s ease;
+        }
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(200, 149, 108, 0.25);
+        }
+        .cta-btn:active { transform: translateY(0); }
+
+        /* ---- Nav blur ---- */
+        .nav-scrolled {
+            background: rgba(20, 18, 16, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(200, 149, 108, 0.06);
+        }
+
+        /* ---- Ayah section glow ---- */
+        .ayah-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(200,149,108,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body class="bg-warm-bg text-warm-text font-body noise overflow-x-hidden">
+
+    <!-- Ambient glow -->
+    <div class="warm-glow" aria-hidden="true"></div>
+
+    <!-- ====== NAV ====== -->
+    <nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+            <a href="#" class="font-display text-lg tracking-wide text-warm-text/70 hover:text-warm-text transition-colors">
+                Prayer Debts
+            </a>
+            <a href="#download" class="text-sm font-medium text-warm-accent/80 hover:text-warm-accent-light transition-colors">
+                Download
+            </a>
+        </div>
+    </nav>
+
+    <!-- ====== HERO ====== -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center px-6 text-center">
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <p class="font-arabic text-3xl md:text-4xl text-warm-muted/70 hero-anim h-d1 mb-10">
+                بِسْمِ اللَّهِ
+            </p>
+
+            <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight hero-anim h-d2 mb-6 leading-[1.1]">
+                <span class="grad-text">Prayer Debts</span>
+            </h1>
+
+            <p class="font-body text-base sm:text-lg md:text-xl text-warm-muted font-light hero-anim h-d3 mb-14 max-w-sm mx-auto leading-relaxed">
+                Your journey back.<br>One prayer at a time.
+            </p>
+
+            <div class="hero-anim h-d4 flex flex-col items-center gap-4">
+                <a href="#download" class="cta-btn inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-sm sm:text-base tracking-wide">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    Download for iPhone
+                </a>
+                <span class="text-warm-muted/40 text-xs hero-anim h-d5">Free &middot; No ads &middot; No account</span>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 scroll-hint hero-anim h-d5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-warm-muted/40">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ====== EMOTIONAL BRIDGE ====== -->
+    <section class="relative py-28 md:py-44 px-6">
+        <div class="relative z-10 max-w-xl mx-auto text-center">
+            <p class="reveal font-display text-2xl sm:text-3xl md:text-4xl font-light text-warm-text/60 leading-snug mb-8">
+                You carry the weight<br>of missed prayers.
+            </p>
+            <p class="reveal d2 font-display text-lg sm:text-xl md:text-2xl font-light text-warm-muted/60 leading-relaxed mb-20">
+                Maybe it's been years.<br>The number feels impossible.
+            </p>
+
+            <div class="reveal d3 warm-line max-w-[120px] mx-auto mb-20"></div>
+
+            <p class="reveal d4 font-display text-2xl md:text-3xl font-light text-warm-text/80 mb-8">
+                It's not.
+            </p>
+
+            <p class="reveal d5 mb-4">
+                <span class="font-display text-5xl sm:text-6xl md:text-7xl font-light grad-text">1,825</span>
+                <span class="font-display text-xl sm:text-2xl md:text-3xl text-warm-muted/60 ml-2">prayers</span>
+            </p>
+
+            <p class="reveal d6 font-body text-warm-muted/70 text-base sm:text-lg font-light">
+                That's your journey. And it starts with one.
+            </p>
+        </div>
+    </section>
+
+    <!-- ====== APP SHOWCASE ====== -->
+    <section class="relative py-20 md:py-36">
+        <div class="relative z-10">
+            <h2 class="reveal font-display text-2xl sm:text-3xl md:text-4xl text-center font-light mb-3 px-6">
+                A sanctuary, not a spreadsheet
+            </h2>
+            <p class="reveal d1 text-center text-warm-muted/60 font-light text-sm sm:text-base mb-16 md:mb-24 max-w-sm mx-auto px-6">
+                Designed to feel like the quiet moment after salah
+            </p>
+
+            <!-- Phone gallery -->
+            <div class="phone-gallery reveal d2">
+                <!-- Left: Welcome -->
+                <div class="hidden md:block transform -rotate-[7deg] translate-y-10 opacity-60 hover:opacity-85 transition-opacity duration-600">
+                    <div class="phone phone-sm">
+                        <div class="phone-screen">
+                            <img src="img/screen-welcome.png" alt="Welcome screen with Bismillah" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center: Dashboard -->
+                <div class="relative z-10">
+                    <div class="phone phone-lg">
+                        <div class="phone-screen">
+                            <img src="img/screen-dashboard.png" alt="Main dashboard showing 242 prayers offered across five daily prayers" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Reveal -->
+                <div class="hidden md:block transform rotate-[7deg] translate-y-10 opacity-60 hover:opacity-85 transition-opacity duration-600">
+                    <div class="phone phone-sm">
+                        <div class="phone-screen">
+                            <img src="img/screen-reveal.png" alt="Journey screen showing total prayer count with Quranic encouragement" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile: Show additional phones in horizontal scroll -->
+            <div class="md:hidden mt-4">
+                <div class="flex gap-5 overflow-x-auto snap-x snap-mandatory px-6 pb-4 scrollbar-none" style="scrollbar-width:none;">
+                    <div class="snap-center flex-shrink-0">
+                        <div class="phone phone-sm">
+                            <div class="phone-screen">
+                                <img src="img/screen-welcome.png" alt="Welcome screen" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="snap-center flex-shrink-0">
+                        <div class="phone phone-sm">
+                            <div class="phone-screen">
+                                <img src="img/screen-reveal.png" alt="Journey reveal screen" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FEATURES ====== -->
+    <section class="relative py-24 md:py-36 px-6">
+        <div class="relative z-10 max-w-5xl mx-auto">
+            <h2 class="reveal font-display text-2xl sm:text-3xl md:text-4xl text-center font-light mb-3">
+                Built for the soul
+            </h2>
+            <p class="reveal d1 text-center text-warm-muted/60 font-light text-sm sm:text-base mb-14 md:mb-20 max-w-sm mx-auto">
+                Every detail serves your spiritual journey
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                <!-- 1: One-tap -->
+                <div class="reveal feat-card p-7 sm:p-8">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center mb-5" style="background:rgba(200,149,108,0.08);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8956C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
+                            <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl text-warm-text mb-2">One tap, one prayer</h3>
+                    <p class="text-warm-muted/70 font-light text-sm leading-relaxed">
+                        Tap a prayer card. A gentle haptic confirms your offering. No forms, no friction — just you and your intention.
+                    </p>
+                </div>
+
+                <!-- 2: Progress -->
+                <div class="reveal d1 feat-card p-7 sm:p-8">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center mb-5" style="background:rgba(200,149,108,0.08);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8956C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 17l6-6 4 4 8-8"/>
+                            <path d="M17 7h4v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl text-warm-text mb-2">Progress, not pressure</h3>
+                    <p class="text-warm-muted/70 font-light text-sm leading-relaxed">
+                        Every number celebrates what you've offered — never what remains.
+                    </p>
+                </div>
+
+                <!-- 3: Private -->
+                <div class="reveal d2 feat-card p-7 sm:p-8">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center mb-5" style="background:rgba(200,149,108,0.08);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8956C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="11" width="14" height="10" rx="2"/>
+                            <path d="M12 16v2"/>
+                            <path d="M8 11V7a4 4 0 018 0v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl text-warm-text mb-2">Private & on-device</h3>
+                    <p class="text-warm-muted/70 font-light text-sm leading-relaxed">
+                        Your worship is between you and Allah. No accounts, no servers, no tracking. Everything stays on your device.
+                    </p>
+                </div>
+
+                <!-- 4: iCloud -->
+                <div class="reveal d3 feat-card p-7 sm:p-8">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center mb-5" style="background:rgba(200,149,108,0.08);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8956C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6.5 19a4.5 4.5 0 01-.42-8.98 7 7 0 0113.84 0A4.5 4.5 0 0117.5 19H6.5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-lg sm:text-xl text-warm-text mb-2">Synced with iCloud</h3>
+                    <p class="text-warm-muted/70 font-light text-sm leading-relaxed">
+                        Your progress follows you silently across all your Apple devices. Automatic, invisible, always there.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== MORE SCREENS (Secondary showcase) ====== -->
+    <section class="relative py-16 md:py-28 px-6">
+        <div class="relative z-10 max-w-5xl mx-auto">
+            <h2 class="reveal font-display text-xl sm:text-2xl md:text-3xl text-center font-light mb-3 text-warm-text/70">
+                Gentle from the first moment
+            </h2>
+            <p class="reveal d1 text-center text-warm-muted/50 font-light text-sm mb-14 md:mb-20 max-w-sm mx-auto">
+                Setup takes under a minute
+            </p>
+
+            <div class="flex gap-6 md:gap-8 justify-center items-center overflow-x-auto snap-x snap-mandatory pb-4 md:overflow-visible" style="scrollbar-width:none;">
+                <div class="reveal snap-center flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    <div class="phone phone-sm">
+                        <div class="phone-screen">
+                            <img src="img/screen-method.png" alt="Choose calculation method" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal d1 snap-center flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    <div class="phone phone-sm">
+                        <div class="phone-screen">
+                            <img src="img/screen-calculate.png" alt="Auto-calculate prayer debt from dates" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal d2 snap-center flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    <div class="phone phone-sm">
+                        <div class="phone-screen">
+                            <img src="img/screen-settings.png" alt="Settings showing prayer debt management" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== AYAH ====== -->
+    <section class="relative py-32 md:py-48 px-6 overflow-hidden">
+        <div class="ayah-glow" aria-hidden="true"></div>
+        <div class="relative z-10 max-w-3xl mx-auto text-center">
+            <p class="reveal font-arabic text-3xl sm:text-4xl md:text-5xl leading-relaxed mb-8" style="color:#C8956C;">
+                إِنَّ مَعَ الْعُسْرِ يُسْرًا
+            </p>
+            <p class="reveal d1 font-display text-lg sm:text-xl md:text-2xl text-warm-text/50 italic mb-3">
+                With hardship comes ease
+            </p>
+            <p class="reveal d2 font-body text-warm-muted/40 text-sm">
+                — Quran 94:6
+            </p>
+        </div>
+    </section>
+
+    <!-- ====== DOWNLOAD CTA ====== -->
+    <section id="download" class="relative py-28 md:py-36 px-6">
+        <div class="relative z-10 max-w-lg mx-auto text-center">
+            <h2 class="reveal font-display text-3xl sm:text-4xl md:text-5xl font-light mb-6 leading-tight">
+                <span class="grad-text">Begin your journey</span>
+            </h2>
+            <p class="reveal d1 text-warm-muted/60 font-light text-sm sm:text-base mb-10 leading-relaxed">
+                Free. No ads. No account needed.<br>
+                Just a quiet companion on your path back.
+            </p>
+            <div class="reveal d2 flex flex-col items-center gap-4">
+                <a href="#" class="cta-btn inline-flex items-center gap-3 px-9 py-4 rounded-2xl font-semibold text-sm sm:text-base tracking-wide">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    Download for iPhone
+                </a>
+                <span class="text-warm-muted/30 text-xs">Requires iOS 17 or later</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="relative py-16 px-6">
+        <div class="warm-line max-w-[100px] mx-auto mb-12"></div>
+        <div class="relative z-10 text-center">
+            <p class="font-body text-warm-muted/50 text-sm mb-1.5">
+                Made with <span class="font-arabic text-base" style="color:rgba(200,149,108,0.4);">إخلاص</span>
+            </p>
+            <p class="font-body text-warm-muted/25 text-xs mb-4">
+                ikhlas — sincerity for Allah's sake
+            </p>
+            <a href="/privacy.html" class="font-body text-warm-muted/25 text-xs hover:text-warm-muted/50 transition-colors underline underline-offset-4 decoration-warm-muted/10">
+                Privacy Policy
+            </a>
+        </div>
+    </footer>
+
+    <!-- ====== SCRIPTS ====== -->
+    <script>
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        let navScrolled = false;
+        function checkNav() {
+            const shouldShow = window.scrollY > 60;
+            if (shouldShow !== navScrolled) {
+                navScrolled = shouldShow;
+                nav.classList.toggle('nav-scrolled', shouldShow);
+            }
+        }
+        window.addEventListener('scroll', checkNav, { passive: true });
+
+        // Intersection Observer for .reveal elements
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Prayer Debts</title>
+    <meta name="description" content="Privacy Policy for Prayer Debts. We do not collect, store, or share any personal information.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23C8956C'/%3E%3Cstop offset='100%25' stop-color='%23E8C47C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        warm: {
+                            bg: '#141210',
+                            surface: '#1E1C19',
+                            text: '#F5F0E8',
+                            muted: '#8A8279',
+                            accent: '#C8956C',
+                            'accent-light': '#E8C47C',
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        .noise::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.022;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        .warm-glow {
+            position: fixed;
+            top: -25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140%;
+            height: 70%;
+            background: radial-gradient(
+                ellipse at 50% 15%,
+                rgba(190, 120, 55, 0.12) 0%,
+                rgba(160, 95, 35, 0.05) 35%,
+                transparent 65%
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .warm-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(200, 149, 108, 0.25), transparent);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .fade-d1 { animation-delay: 0.15s; }
+        .fade-d2 { animation-delay: 0.3s; }
+    </style>
+</head>
+
+<body class="bg-warm-bg text-warm-text font-body noise overflow-x-hidden">
+
+    <div class="warm-glow" aria-hidden="true"></div>
+
+    <!-- Nav -->
+    <nav class="relative z-10 max-w-3xl mx-auto px-6 py-8 flex items-center justify-between">
+        <a href="/" class="font-display text-lg tracking-wide text-warm-text/70 hover:text-warm-text transition-colors">
+            Prayer Debts
+        </a>
+        <a href="/" class="text-sm font-medium text-warm-accent/80 hover:text-warm-accent-light transition-colors">
+            &larr; Back
+        </a>
+    </nav>
+
+    <!-- Content -->
+    <main class="relative z-10 max-w-3xl mx-auto px-6 pb-24">
+
+        <header class="pt-8 pb-16 fade-in">
+            <h1 class="font-display text-4xl md:text-5xl font-light tracking-tight mb-4">
+                Privacy Policy
+            </h1>
+            <p class="text-warm-muted/60 text-sm">
+                Prayer Debts &middot; Effective date: February 21, 2026
+            </p>
+        </header>
+
+        <div class="warm-line mb-16 fade-in fade-d1"></div>
+
+        <div class="space-y-12 fade-in fade-d2">
+
+            <section>
+                <p class="text-warm-text/80 font-light leading-relaxed text-base">
+                    Prayer Debts does not collect, store, or share any personal information.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-display text-xl md:text-2xl font-light mb-4 text-warm-text/90">Your data stays on your device</h2>
+                <p class="text-warm-muted/70 font-light leading-relaxed text-sm">
+                    All data entered into the app (such as prayer records and progress information) is stored locally on your device.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-display text-xl md:text-2xl font-light mb-4 text-warm-text/90">iCloud synchronization</h2>
+                <p class="text-warm-muted/70 font-light leading-relaxed text-sm">
+                    If iCloud synchronization is enabled on your device, your data may be securely synced across your Apple devices using Apple's CloudKit service. This synchronization is handled entirely by Apple and is subject to <a href="https://www.apple.com/legal/privacy/" class="text-warm-accent/70 hover:text-warm-accent-light underline underline-offset-4 decoration-warm-accent/20 transition-colors" target="_blank" rel="noopener">Apple's Privacy Policy</a>.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-display text-xl md:text-2xl font-light mb-4 text-warm-text/90">No tracking</h2>
+                <p class="text-warm-muted/70 font-light leading-relaxed text-sm">
+                    Prayer Debts does not use analytics services, advertising frameworks, tracking technologies, or third-party data processors.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-display text-xl md:text-2xl font-light mb-4 text-warm-text/90">We cannot access your data</h2>
+                <p class="text-warm-muted/70 font-light leading-relaxed text-sm">
+                    We do not have access to your data at any time.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-display text-xl md:text-2xl font-light mb-4 text-warm-text/90">Deleting your data</h2>
+                <p class="text-warm-muted/70 font-light leading-relaxed text-sm">
+                    If you delete the app, all locally stored data is removed from your device. Data stored in iCloud can be managed or deleted by the user through their Apple ID settings.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="font-display text-xl md:text-2xl font-light mb-4 text-warm-text/90">Contact</h2>
+                <p class="text-warm-muted/70 font-light leading-relaxed text-sm">
+                    If you have any questions, you may contact:<br>
+                    <a id="contact-email" href="#" class="text-warm-accent/70 hover:text-warm-accent-light underline underline-offset-4 decoration-warm-accent/20 transition-colors cursor-pointer"></a>
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-12 px-6">
+        <div class="warm-line max-w-[80px] mx-auto mb-10"></div>
+        <div class="text-center">
+            <p class="font-body text-warm-muted/30 text-xs">
+                Prayer Debts
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            var el = document.getElementById('contact-email');
+            if (!el) return;
+            var addr = atob('YmVseWFsb3ZyZXNoYXRAZ21haWwuY29t');
+            el.textContent = addr;
+            el.href = atob('bWFpbHRvOmJlbHlhbG92cmVzaGF0QGdtYWlsLmNvbQ==');
+        })();
+    </script>
+
+</body>
+</html>
