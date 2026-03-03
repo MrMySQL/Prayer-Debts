@@ -421,7 +421,6 @@ This is where the user lives. 95% of their time is here. Every element must earn
 #### Today's Quiet Counter
 - Bottom center, muted small text: **"Today: +3"**
 - Not a goal, not a streak — just an acknowledgment
-- Some days it's 0, and that's okay. The app doesn't judge.
 
 #### What's NOT on this screen
 - No hamburger menu
