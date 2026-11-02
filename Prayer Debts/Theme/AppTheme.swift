@@ -1,31 +1,40 @@
 import SwiftUI
 
 enum AppTheme {
-    // MARK: - Dark Mode Colors
+    // MARK: - Dark Mode Colors ("warm darkness" — lantern light in a quiet mosque)
     enum Dark {
-        static let background = Color(red: 0.078, green: 0.071, blue: 0.063)       // #141210
-        static let cardSurface = Color(red: 0.118, green: 0.110, blue: 0.098)      // #1E1C19
-        static let primaryText = Color(red: 0.961, green: 0.941, blue: 0.910)      // #F5F0E8
-        static let secondaryText = Color(red: 0.541, green: 0.510, blue: 0.475)    // #8A8279
-        static let progressEmpty = Color(red: 0.145, green: 0.137, blue: 0.125)    // #252320
-        static let dangerMuted = Color(red: 0.784, green: 0.416, blue: 0.416)      // #C86A6A
+        static let background = Color(hex: 0x141210)
+        static let cardSurface = Color(hex: 0x1E1C19)
+        static let primaryText = Color(hex: 0xF5F0E8)
+        static let secondaryText = Color(hex: 0x8A8279)
+        static let progressEmpty = Color(hex: 0x252320)
+        static let dangerMuted = Color(hex: 0xC86A6A)
+        static let accent = Color(hex: 0xC8956C)
+        static let accentGradient = [Color(hex: 0xC8956C), Color(hex: 0xE8C47C)]
+        static let cardShadow = Color.clear
+        static let cardBorder = Color.clear
     }
 
-    // MARK: - Light Mode Colors
+    // MARK: - Light Mode Colors ("cream paper under soft daylight")
     enum Light {
-        static let background = Color(red: 0.980, green: 0.969, blue: 0.949)       // #FAF7F2
-        static let cardSurface = Color.white
-        static let primaryText = Color(red: 0.118, green: 0.110, blue: 0.098)      // #1E1C19
-        static let secondaryText = Color(red: 0.541, green: 0.510, blue: 0.475)    // #8A8279
-        static let progressEmpty = Color(red: 0.922, green: 0.910, blue: 0.890)    // #EBE8E3
-        static let dangerMuted = Color(red: 0.698, green: 0.302, blue: 0.302)      // #B24D4D
+        static let background = Color(hex: 0xFAF7F2)
+        static let cardSurface = Color(hex: 0xFFFDF9)
+        static let primaryText = Color(hex: 0x2A2520)
+        static let secondaryText = Color(hex: 0x756C62)
+        static let progressEmpty = Color(hex: 0xECE6DC)
+        static let dangerMuted = Color(hex: 0xA94545)
+        // Deeper amber so accent text stays readable on cream
+        static let accent = Color(hex: 0xA8703F)
+        static let accentGradient = [Color(hex: 0xB47A48), Color(hex: 0xD3A257)]
+        static let cardShadow = Color(hex: 0x5A4128).opacity(0.08)
+        static let cardBorder = Color(hex: 0xE9E1D4)
     }
 
-    // MARK: - Accent Gradient (same in both modes)
-    static let accentStart = Color(red: 0.784, green: 0.584, blue: 0.424)          // #C8956C
-    static let accentEnd = Color(red: 0.910, green: 0.769, blue: 0.486)            // #E8C47C
+    // MARK: - Accent Gradient (brand; prefer `ThemeColors.accentGradient` in views)
+    static let accentStart = Dark.accent
+    static let accentEnd = Color(hex: 0xE8C47C)
     static let accentGradient = LinearGradient(
-        colors: [accentStart, accentEnd],
+        colors: Dark.accentGradient,
         startPoint: .leading,
         endPoint: .trailing
     )
@@ -41,16 +50,54 @@ enum AppTheme {
     }
 }
 
+// MARK: - Appearance Preference
+enum AppearancePreference: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    static let storageKey = "appearancePreference"
+
+    var id: String { rawValue }
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+}
+
 // MARK: - Environment-Aware Color Helpers
 struct ThemeColors {
     let colorScheme: ColorScheme
 
-    var background: Color { colorScheme == .dark ? AppTheme.Dark.background : AppTheme.Light.background }
-    var cardSurface: Color { colorScheme == .dark ? AppTheme.Dark.cardSurface : AppTheme.Light.cardSurface }
-    var primaryText: Color { colorScheme == .dark ? AppTheme.Dark.primaryText : AppTheme.Light.primaryText }
-    var secondaryText: Color { colorScheme == .dark ? AppTheme.Dark.secondaryText : AppTheme.Light.secondaryText }
-    var progressEmpty: Color { colorScheme == .dark ? AppTheme.Dark.progressEmpty : AppTheme.Light.progressEmpty }
-    var dangerMuted: Color { colorScheme == .dark ? AppTheme.Dark.dangerMuted : AppTheme.Light.dangerMuted }
+    private var isDark: Bool { colorScheme == .dark }
+
+    var background: Color { isDark ? AppTheme.Dark.background : AppTheme.Light.background }
+    var cardSurface: Color { isDark ? AppTheme.Dark.cardSurface : AppTheme.Light.cardSurface }
+    var primaryText: Color { isDark ? AppTheme.Dark.primaryText : AppTheme.Light.primaryText }
+    var secondaryText: Color { isDark ? AppTheme.Dark.secondaryText : AppTheme.Light.secondaryText }
+    var progressEmpty: Color { isDark ? AppTheme.Dark.progressEmpty : AppTheme.Light.progressEmpty }
+    var dangerMuted: Color { isDark ? AppTheme.Dark.dangerMuted : AppTheme.Light.dangerMuted }
+    var accent: Color { isDark ? AppTheme.Dark.accent : AppTheme.Light.accent }
+    var cardShadow: Color { isDark ? AppTheme.Dark.cardShadow : AppTheme.Light.cardShadow }
+    var cardBorder: Color { isDark ? AppTheme.Dark.cardBorder : AppTheme.Light.cardBorder }
+
+    var accentGradient: LinearGradient {
+        LinearGradient(
+            colors: isDark ? AppTheme.Dark.accentGradient : AppTheme.Light.accentGradient,
+            startPoint: .leading,
+            endPoint: .trailing
+        )
+    }
 }
 
 // MARK: - Environment Key
@@ -65,7 +112,7 @@ extension EnvironmentValues {
     }
 }
 
-// MARK: - View Modifier
+// MARK: - View Modifiers
 struct ThemeModifier: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
 
@@ -75,8 +122,38 @@ struct ThemeModifier: ViewModifier {
     }
 }
 
+/// Card surface: flat in dark mode; in light mode a hairline border and a soft
+/// warm shadow so white cards don't dissolve into the cream background.
+struct WarmCardModifier: ViewModifier {
+    @Environment(\.themeColors) private var colors
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        content
+            .background(colors.cardSurface, in: shape)
+            .overlay(shape.strokeBorder(colors.cardBorder, lineWidth: 0.5))
+            .shadow(color: colors.cardShadow, radius: 10, x: 0, y: 3)
+    }
+}
+
 extension View {
     func withAppTheme() -> some View {
         modifier(ThemeModifier())
+    }
+
+    func warmCard(cornerRadius: CGFloat = 16) -> some View {
+        modifier(WarmCardModifier(cornerRadius: cornerRadius))
+    }
+}
+
+// MARK: - Color hex initializer
+extension Color {
+    init(hex: UInt32) {
+        self.init(
+            red: Double((hex >> 16) & 0xFF) / 255.0,
+            green: Double((hex >> 8) & 0xFF) / 255.0,
+            blue: Double(hex & 0xFF) / 255.0
+        )
     }
 }

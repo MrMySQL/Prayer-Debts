@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WarmButton: View {
+    @Environment(\.themeColors) private var colors
     let title: LocalizedStringKey
     let action: () -> Void
 
@@ -11,7 +12,7 @@ struct WarmButton: View {
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(AppTheme.accentGradient, in: RoundedRectangle(cornerRadius: 14))
+                .background(colors.accentGradient, in: RoundedRectangle(cornerRadius: 14))
         }
         .padding(.horizontal, 32)
     }

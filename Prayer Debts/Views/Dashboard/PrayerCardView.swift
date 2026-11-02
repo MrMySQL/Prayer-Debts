@@ -30,7 +30,7 @@ struct PrayerCardView: View {
                     VStack(alignment: .trailing, spacing: 4) {
                         Text("\(debt.completedCount.formatted())")
                             .font(AppTheme.Typography.prayerCount)
-                            .foregroundStyle(AppTheme.accentStart)
+                            .foregroundStyle(colors.accent)
                             .contentTransition(.numericText())
 
                         if showUndo {
@@ -59,7 +59,7 @@ struct PrayerCardView: View {
                             .fill(colors.progressEmpty)
 
                         RoundedRectangle(cornerRadius: 2)
-                            .fill(AppTheme.accentGradient)
+                            .fill(colors.accentGradient)
                             .frame(width: geo.size.width * debt.progress)
                             .animation(.easeOut(duration: 0.3), value: debt.progress)
                     }
@@ -67,7 +67,7 @@ struct PrayerCardView: View {
                 .frame(height: 4)
             }
             .padding(16)
-            .background(colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
+            .warmCard(cornerRadius: 16)
         }
         .buttonStyle(.plain)
         .sensoryFeedback(.impact(flexibility: .soft), trigger: ripple)

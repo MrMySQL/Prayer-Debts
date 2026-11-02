@@ -2,6 +2,7 @@ import SwiftUI
 
 struct JourneyHeaderView: View {
     @Environment(\.themeColors) private var colors
+    @Environment(\.colorScheme) private var colorScheme
     let totalOffered: Int
     let overallProgress: Double
 
@@ -13,27 +14,28 @@ struct JourneyHeaderView: View {
 
     private var trimRange: CGFloat { trimEnd - trimStart }
 
-    private let glowColor = Color(.black)
+    private var isDark: Bool { colorScheme == .dark }
 
     private var progressTrimEnd: CGFloat {
         trimStart + trimRange * min(max(overallProgress, 0), 1)
     }
 
+    /// Sky colors through the day. Light mode uses deeper tones of the same hues
+    /// so the large number keeps its contrast against the cream background.
     private var timeGradient: LinearGradient {
         let hour = Calendar.current.component(.hour, from: Date())
-        let (start, end): (Color, Color) = switch hour {
-        case 4...6:
-            (Color(hex: 0x5B7FA6), Color(hex: 0xE8C47C))
-        case 7...14:
-            (Color(hex: 0xC8956C), Color(hex: 0xE8C47C))
-        case 15...17:
-            (Color(hex: 0xB87D4A), Color(hex: 0xD4A66A))
-        case 18...19:
-            (Color(hex: 0xC87A4A), Color(hex: 0x9B7AAD))
-        default:
-            (Color(hex: 0x4A7B7D), Color(hex: 0xE8C47C))
+        let (start, end): (UInt32, UInt32) = switch hour {
+        case 4...6:   isDark ? (0x5B7FA6, 0xE8C47C) : (0x4A6C93, 0xB8862F) // Fajr
+        case 7...14:  isDark ? (0xC8956C, 0xE8C47C) : (0xA8703F, 0xC0913A) // Day
+        case 15...17: isDark ? (0xB87D4A, 0xD4A66A) : (0x9A6436, 0xB5843F) // Asr
+        case 18...19: isDark ? (0xC87A4A, 0x9B7AAD) : (0xA85F33, 0x7D5E91) // Maghrib
+        default:      isDark ? (0x4A7B7D, 0xE8C47C) : (0x3D6668, 0xB8862F) // Night
         }
-        return LinearGradient(colors: [start, end], startPoint: .leading, endPoint: .trailing)
+        return LinearGradient(
+            colors: [Color(hex: start), Color(hex: end)],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
     }
 
     var body: some View {
@@ -42,11 +44,11 @@ struct JourneyHeaderView: View {
             Text("YOUR JOURNEY")
                 .font(.system(size: 13, weight: .regular))
                 .tracking(2)
-                .foregroundStyle(.white)
-                .shadow(color: glowColor.opacity(1), radius: 2, x: 0, y: 0)
-                .shadow(color: glowColor.opacity(1), radius: 4, x: 0, y: 0)
+                .foregroundStyle(isDark ? Color.white : colors.secondaryText)
+                // Dark glow keeps the label legible over the lantern light; not needed on cream
+                .shadow(color: isDark ? .black : .clear, radius: 2, x: 0, y: 0)
+                .shadow(color: isDark ? .black : .clear, radius: 4, x: 0, y: 0)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
-                
 
             // Arc + center text
             ZStack {
@@ -55,6 +57,7 @@ struct JourneyHeaderView: View {
                     .trim(from: trimStart, to: progressTrimEnd)
                     .stroke(timeGradient, style: StrokeStyle(lineWidth: 5, lineCap: .round))
                     .blur(radius: 8)
+                    .opacity(isDark ? 1 : 0.45)
                     .rotationEffect(arcRotation)
                     .animation(.easeOut(duration: 0.7), value: overallProgress)
 
@@ -88,16 +91,5 @@ struct JourneyHeaderView: View {
         }
         .padding(EdgeInsets(top: 24, leading: 0, bottom: 0, trailing: 0))
         .animation(.easeInOut, value: Calendar.current.component(.hour, from: Date()))
-    }
-}
-
-// MARK: - Color hex initializer
-private extension Color {
-    init(hex: UInt32) {
-        self.init(
-            red: Double((hex >> 16) & 0xFF) / 255.0,
-            green: Double((hex >> 8) & 0xFF) / 255.0,
-            blue: Double(hex & 0xFF) / 255.0
-        )
     }
 }
