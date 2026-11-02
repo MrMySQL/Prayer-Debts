@@ -6,6 +6,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \PrayerDebt.prayerTypeRaw) private var debts: [PrayerDebt]
+    @AppStorage(AppearancePreference.storageKey) private var appearance: AppearancePreference = .system
 
     @State private var editingDebt: PrayerDebt?
     @State private var editValue = ""
@@ -34,7 +35,18 @@ struct SettingsView: View {
                             showRecalculate = true
                         }
                         .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(AppTheme.accentStart)
+                        .foregroundStyle(colors.accent)
+
+                        // APPEARANCE section
+                        sectionHeader("APPEARANCE")
+
+                        Picker("Appearance", selection: $appearance) {
+                            ForEach(AppearancePreference.allCases) { option in
+                                Text(option.title).tag(option)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal, 20)
 
                         // ICLOUD section
                         sectionHeader("ICLOUD")
@@ -53,7 +65,7 @@ struct SettingsView: View {
                             Spacer()
                         }
                         .padding(16)
-                        .background(colors.cardSurface, in: RoundedRectangle(cornerRadius: 12))
+                        .warmCard(cornerRadius: 12)
                         .padding(.horizontal, 20)
 
                         // ABOUT section
@@ -164,7 +176,7 @@ struct SettingsView: View {
 
                     Button("Save") { saveEdit(debt) }
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(AppTheme.accentStart)
+                        .foregroundStyle(colors.accent)
                 } else {
                     Text("\(debt.totalDebt)")
                         .font(.system(size: 14, weight: .medium))
@@ -175,12 +187,12 @@ struct SettingsView: View {
                         editValue = "\(debt.totalDebt)"
                     }
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(AppTheme.accentStart)
+                    .foregroundStyle(colors.accent)
                 }
             }
         }
         .padding(16)
-        .background(colors.cardSurface, in: RoundedRectangle(cornerRadius: 12))
+        .warmCard(cornerRadius: 12)
     }
 
     private func saveEdit(_ debt: PrayerDebt) {

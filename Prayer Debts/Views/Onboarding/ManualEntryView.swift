@@ -43,7 +43,7 @@ struct ManualEntryView: View {
                                 .frame(width: 100)
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 12)
-                                .background(colors.cardSurface, in: RoundedRectangle(cornerRadius: 10))
+                                .warmCard(cornerRadius: 10)
                         }
                     }
                 }

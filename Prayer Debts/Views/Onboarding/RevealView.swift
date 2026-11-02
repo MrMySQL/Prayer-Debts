@@ -25,7 +25,7 @@ struct RevealView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 0) {
                         Text(totalPrayers.formatted())
                             .font(AppTheme.Typography.journeyNumber)
-                            .foregroundStyle(AppTheme.accentStart)
+                            .foregroundStyle(colors.accent)
                         Text(" prayers")
                             .font(.system(size: 20, weight: .regular))
                             .foregroundStyle(colors.primaryText)

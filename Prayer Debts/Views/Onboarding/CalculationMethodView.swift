@@ -62,7 +62,7 @@ private struct MethodCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(20)
-            .background(colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
+            .warmCard(cornerRadius: 16)
         }
     }
 }
