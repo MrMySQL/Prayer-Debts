@@ -23,21 +23,14 @@ enum AppTheme {
         static let secondaryText = Color(hex: 0x756C62)
         static let progressEmpty = Color(hex: 0xECE6DC)
         static let dangerMuted = Color(hex: 0xA94545)
-        // Deeper amber so accent text stays readable on cream
-        static let accent = Color(hex: 0xA8703F)
-        static let accentGradient = [Color(hex: 0xB47A48), Color(hex: 0xD3A257)]
+        // Deeper amber so accent text clears 4.5:1 on cream, white and the
+        // darkest part of the light background image
+        static let accent = Color(hex: 0x8A5A2E)
+        // Dark enough for the white button label (>= 4.5:1 across the gradient)
+        static let accentGradient = [Color(hex: 0x8F5B2C), Color(hex: 0x9E6C33)]
         static let cardShadow = Color(hex: 0x5A4128).opacity(0.08)
         static let cardBorder = Color(hex: 0xE9E1D4)
     }
-
-    // MARK: - Accent Gradient (brand; prefer `ThemeColors.accentGradient` in views)
-    static let accentStart = Dark.accent
-    static let accentEnd = Color(hex: 0xE8C47C)
-    static let accentGradient = LinearGradient(
-        colors: Dark.accentGradient,
-        startPoint: .leading,
-        endPoint: .trailing
-    )
 
     // MARK: - Typography
     enum Typography {

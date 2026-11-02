@@ -21,15 +21,15 @@ struct JourneyHeaderView: View {
     }
 
     /// Sky colors through the day. Light mode uses deeper tones of the same hues
-    /// so the large number keeps its contrast against the cream background.
+    /// so every stop of the large number stays above 3:1 on the cream background.
     private var timeGradient: LinearGradient {
         let hour = Calendar.current.component(.hour, from: Date())
         let (start, end): (UInt32, UInt32) = switch hour {
-        case 4...6:   isDark ? (0x5B7FA6, 0xE8C47C) : (0x4A6C93, 0xB8862F) // Fajr
-        case 7...14:  isDark ? (0xC8956C, 0xE8C47C) : (0xA8703F, 0xC0913A) // Day
-        case 15...17: isDark ? (0xB87D4A, 0xD4A66A) : (0x9A6436, 0xB5843F) // Asr
+        case 4...6:   isDark ? (0x5B7FA6, 0xE8C47C) : (0x4A6C93, 0x9A7428) // Fajr
+        case 7...14:  isDark ? (0xC8956C, 0xE8C47C) : (0xA8703F, 0x9A7428) // Day
+        case 15...17: isDark ? (0xB87D4A, 0xD4A66A) : (0x9A6436, 0x96702C) // Asr
         case 18...19: isDark ? (0xC87A4A, 0x9B7AAD) : (0xA85F33, 0x7D5E91) // Maghrib
-        default:      isDark ? (0x4A7B7D, 0xE8C47C) : (0x3D6668, 0xB8862F) // Night
+        default:      isDark ? (0x4A7B7D, 0xE8C47C) : (0x3D6668, 0x9A7428) // Night
         }
         return LinearGradient(
             colors: [Color(hex: start), Color(hex: end)],
